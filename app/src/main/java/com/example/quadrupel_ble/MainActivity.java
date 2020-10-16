@@ -2,22 +2,34 @@ package com.example.quadrupel_ble;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements DeviceBluetoothInterface{
 
     private DeviceBluetoothManager bluetoothManager;
     private Boolean connected = false;
+    private TextView data_textbox;
+    private ImageView connection_icon;
+    Packet packet = new Packet();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Protocol.protocol_init();
+
         setContentView(R.layout.activity_main);
+        connection_icon = findViewById(R.id.connection_icon);
+        connection_icon.setColorFilter(Color.parseColor("#FF0000"));
+        data_textbox = findViewById(R.id.ReceivedData);
 
         this.bluetoothManager = new DeviceBluetoothManager(getApplicationContext(), this);
     }
@@ -27,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
 
         if (this.connected == false) {
             try {
-                bluetoothManager.scanForDevice("Quadrupel 46");
+                bluetoothManager.scanForDevice("QUAD RX-79");
             } catch (DeviceBluetoothException ex) {
                 ex.printStackTrace();
             }
@@ -51,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
                 e.printStackTrace();
             }
         } else {
-            refresh(true);
         }
     }
 
@@ -67,26 +78,25 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
 
         // Update the user interface
         //this.button_toggle_bluetooth.setIsActive((this.connected = didSucceed));
-        refresh(true);
     }
 
     @Override
     public void onCharacteristicChanged(byte[] value) {
         Log.i("onCharacteristicChanged", "Received " + value.length + " bytes of data!");
-
-
-        refresh(false);
+        for(byte b : value)
+        {
+            String toPrint = Integer.toHexString((int) b).toUpperCase();
+            if(toPrint.length() > 2)
+                toPrint = toPrint.substring(toPrint.length() - 2);
+            data_textbox.append("0x"+toPrint + " ");
+            Log.i("protocolRetVal", "Returned: " + Integer.toString(Protocol.protocol_parse(b, packet)));
+        }
+        Log.i("protocol", "Packet CRC: " + packet.crc);
     }
 
     @Override
     public void onCharacteristicWrite(boolean didSucceed) {
         Log.i("onCharacteristicWrite", "Outcome of write = " + didSucceed);
-        Toast.makeText(getApplicationContext(), "Wrote data.", Toast.LENGTH_LONG).show();
-
-    }
-
-    public void refresh(boolean dismissLoadingDialog)
-    {
 
     }
 
