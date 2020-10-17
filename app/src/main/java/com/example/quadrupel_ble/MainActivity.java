@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.view.WindowInsets;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,25 +21,60 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
     private Boolean connected = false;
     private TextView data_textbox;
     private ImageView connection_icon;
+    private Button connection_button;
+    private Button ping_button;
+
+    private SeekBar throttle_sb;
+    private SeekBar roll_sb;
+    private SeekBar yaw_sb;
+    private SeekBar pitch_sb;
+
     Packet packet = new Packet();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Protocol.protocol_init();
-
         setContentView(R.layout.activity_main);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        connection_button = findViewById(R.id.connection_button);
+
+        ping_button = findViewById(R.id.ping_button);
+        ping_button.setEnabled(false);
+
         connection_icon = findViewById(R.id.connection_icon);
         connection_icon.setColorFilter(Color.parseColor("#FF0000"));
+
         data_textbox = findViewById(R.id.ReceivedData);
+
+        throttle_sb = findViewById(R.id.throttle_seekbar);
+        throttle_sb.setMax(255);
+        roll_sb = findViewById(R.id.roll_seekbar);
+        roll_sb.setMax(255);
+        roll_sb.setProgress(128);//-128 for drone data
+        pitch_sb = findViewById(R.id.pitch_seekbar);
+        pitch_sb.setMax(255);
+        pitch_sb.setProgress(128);//-128 for drone data
+        yaw_sb = findViewById(R.id.yaw_seekbar);
+        yaw_sb.setMax(255);
+        yaw_sb.setProgress(128);//-128 for drone data
+
+
 
         this.bluetoothManager = new DeviceBluetoothManager(getApplicationContext(), this);
     }
 
     public void connectionButton(View view) {
         Toast.makeText(getApplicationContext(), "Attempting Connection. . .", Toast.LENGTH_LONG).show();
-
+        connection_button.setEnabled(false);
         if (this.connected == false) {
             try {
                 bluetoothManager.scanForDevice("QUAD RX-79");
@@ -46,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
         } else {
             bluetoothManager.disconnectDevice();
             connected = false;
+            connection_button.setEnabled(true);
+            updateUI(false);
         }
         //System.exit(0);
     }
@@ -63,7 +103,10 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
                 e.printStackTrace();
             }
         } else {
+            connected = false;
+            connection_button.setEnabled(true);
         }
+        updateUI(connected);
     }
 
     @Override
@@ -71,13 +114,31 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
         // Log message
         Log.i("onBluetoothConnect", "Outcome = " + didSucceed);
 
-        // Reset everything in preparation for brush mode
-        if (didSucceed) {
-            //Toast.makeText(getApplicationContext(), "Connected.", Toast.LENGTH_LONG).show();
-        }
+        updateUI(didSucceed);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                connection_button.setEnabled(true);
+            }
+        });
 
         // Update the user interface
         //this.button_toggle_bluetooth.setIsActive((this.connected = didSucceed));
+    }
+
+    public void updateUI(boolean connected)
+    {
+        if(connected)
+        {
+            connection_icon.setColorFilter(Color.parseColor("#00FF00"));
+            connection_button.setText("Disconnect");
+        }else
+        {
+            connection_icon.setColorFilter(Color.parseColor("#FF0000"));
+            connection_button.setText("Connect");
+        }
+        ping_button.setEnabled(connected);
     }
 
     @Override
@@ -102,5 +163,39 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
 
     public void pingButton(View view) {
         bluetoothManager.enqueueMessageBuffer(new byte[]{(byte) 0xFF, (byte) 0x02, (byte) 0x00, (byte) 0x16});//FF 02 00 16 (ping)
+    }
+
+    public void onMode0Button(View view) {
+    }
+
+    public void onMode1Button(View view) {
+    }
+
+    public void onMode2Button(View view) {
+    }
+
+    public void onMode3Button(View view) {
+    }
+
+    public void onMode4Button(View view) {
+    }
+
+    public void onMode5Button(View view) {
+    }
+
+    public void onMode6Button(View view) {
+    }
+
+    public void onMode7Button(View view) {
+    }
+
+
+
+    public void bluetoothImageButton(View view) {
+        if(connected)
+        {
+            Toast.makeText(getApplicationContext(), "Disabled Wireless!", Toast.LENGTH_LONG).show();
+
+        }
     }
 }
