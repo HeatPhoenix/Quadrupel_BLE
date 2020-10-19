@@ -329,8 +329,15 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
     public void bluetoothImageButton(View view) {
         if(connected)
         {
-            Toast.makeText(getApplicationContext(), "Disabled Wireless!", Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {Toast.makeText(getApplicationContext(), "Disabled Wireless!", Toast.LENGTH_LONG).show();
 
+                }
+            });
+
+
+            sendPacket(Commands.send_mode(Protocol.modes.SET_WIRELESS.toByte()));
         }
     }
 
@@ -363,6 +370,6 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
     }
 
     public void onManualButton(View view) {
-        sendPacket(Commands.send_mode(Protocol.modes.SET_WIRELESS.toByte()));
+        sendPacket(Commands.send_mode(Protocol.modes.MODE_MANUAL.toByte()));
     }
 }

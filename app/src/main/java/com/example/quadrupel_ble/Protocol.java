@@ -27,6 +27,8 @@ public class Protocol {
 
     public enum modes {
         MODE_SAFE(0x00),
+        MODE_PANIC(0x01),
+        MODE_MANUAL(0x02),
 
         MODE_CALIB(0x03),
         MODE_YAW(0x04),
