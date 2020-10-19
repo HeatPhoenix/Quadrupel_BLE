@@ -105,6 +105,7 @@
                         android:layout_width="180dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
+
                         android:rotation="270"/>
 
                 </FrameLayout>
@@ -236,8 +237,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="10dp"
-            android:onClick="onMode2Button"
+            android:textSize="12dp"
+            android:onClick="onCalibrateButton"
             android:text="Calibrate"/>
 
         <Button
@@ -245,7 +246,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="onMode3Button"
+            android:onClick="onYawButton"
             android:text="Yaw" />
 
     </LinearLayout>
@@ -264,7 +265,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="onMode4Button"
+            android:onClick="onFullButton"
             android:text="Full" />
 
         <Button
@@ -272,7 +273,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="onMode5Button"
+            android:onClick="onRawButton"
             android:text="Raw" />
 
         <Button
@@ -280,7 +281,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="onMode6Button"
+            android:onClick="onHeightButton"
             android:text="Height" />
 
         <Button
@@ -288,8 +289,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="onMode7Button"
-            android:text="Mode 7" />
+            android:onClick="onManualButton"
+            android:text="Manual" />
 
     </LinearLayout>
 
@@ -314,11 +315,12 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/battery_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="100%"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"
@@ -343,11 +345,41 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/roll_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="100"
+                android:text=""
+                android:fontFamily="sans-serif-black"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/rounded_textview_dark"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Roll"
+                android:fontFamily="sans-serif-condensed-light"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/rounded_textview_light"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/pitch_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"
@@ -364,34 +396,6 @@
                 android:background="@drawable/rounded_textview_light"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="100"
-                android:fontFamily="sans-serif-black"
-                android:autoSizeTextType="uniform"
-                android:background="@drawable/rounded_textview_dark"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Yaw"
-                android:fontFamily="sans-serif-condensed-light"
-                android:autoSizeTextType="uniform"
-                android:background="@drawable/rounded_textview_light"
-                />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -400,11 +404,12 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/yaw_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="100"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"
@@ -415,7 +420,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Roll"
+            android:text="Yaw"
             android:fontFamily="sans-serif-condensed-light"
             android:autoSizeTextType="uniform"
             android:background="@drawable/rounded_textview_light"
@@ -439,11 +444,12 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/m1_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="100"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"
@@ -468,11 +474,12 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/m2_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="100"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"
@@ -496,11 +503,12 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/m3_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="100"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"
@@ -525,11 +533,12 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/m4_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="100"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"
@@ -582,11 +591,12 @@
             />
 
         <TextView
+            android:id="@+id/mode_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="7"
+            android:text=""
             android:fontFamily="sans-serif-black"
             android:autoSizeTextType="uniform"
             android:background="@drawable/rounded_textview_dark"
@@ -612,11 +622,12 @@
                 />
 
             <TextView
+                android:id="@+id/flags_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="7"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/rounded_textview_dark"

@@ -25,6 +25,47 @@ public class Protocol {
     public static int data_offset = 0;
     public static int crc = 0;
 
+    public enum modes {
+        MODE_SAFE(0x00),
+
+        MODE_CALIB(0x03),
+        MODE_YAW(0x04),
+        MODE_FULL(0x05),
+
+        UNSET_RAW_SENSORS(0x04),
+        UNSET_HEIGHT_CTL (0x05),
+        UNSET_WIRELESS(0x06),
+
+        SET_RAW_SENSORS (0x07),
+        SET_HEIGHT_CTL (0x08),
+        SET_WIRELESS (0x09);
+
+        public final int label;
+        private static Map map = new HashMap<>();
+
+        private modes(int label) {
+            this.label = label;
+        }
+
+        static {
+            for (modes pageType : modes.values()) {
+                map.put(pageType.label, pageType);
+            }
+        }
+
+        public static modes valueOf(int mode) {
+            return (modes) map.get(mode);
+        }
+
+        public int getValue() {
+            return label;
+        }
+
+        public byte toByte(){
+            return (byte) label;
+        }
+    }
+
     public enum packet_type {
         ACK(0x00),
         NACK(0x01),
@@ -116,11 +157,7 @@ public class Protocol {
 
     /* WCET: ~50us if no printf gets executed, else up to 1ms */
     public static int protocol_parse(byte packet_byte, Packet pkt) {
-
-
-
         int retval = 0;
-
 
         switch(state)
         {
