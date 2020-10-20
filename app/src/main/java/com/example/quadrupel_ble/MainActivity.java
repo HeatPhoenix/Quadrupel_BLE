@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        Log.i("dispatchTouchEvent", "Event: " + event.toString());
         View v = getCurrentFocus();
 
         int eventaction = event.getAction();
@@ -337,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
             });
 
 
-            sendPacket(Commands.send_mode(Protocol.modes.SET_WIRELESS.toByte()));
+            sendPacket(Commands.send_mode(Protocol.modes.MODE_WIRELESS.toByte()));
         }
     }
 
@@ -346,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
     }
 
     public void onPanicButton(View view) {
-        sendPacket(Commands.send_panic());//not a mode, i guess
+
+        sendPacket(Commands.send_mode(Protocol.modes.MODE_PANIC.toByte()));//not a mode, i guess
     }
 
     public void onCalibrateButton(View view) {
@@ -362,11 +364,11 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
     }
 
     public void onRawButton(View view) {
-        sendPacket(Commands.send_mode(Protocol.modes.SET_RAW_SENSORS.toByte()));
+        sendPacket(Commands.send_mode(Protocol.modes.MODE_RAW.toByte()));
     }
 
     public void onHeightButton(View view) {
-        sendPacket(Commands.send_mode(Protocol.modes.SET_HEIGHT_CTL.toByte()));
+        sendPacket(Commands.send_mode(Protocol.modes.MODE_HEIGHT.toByte()));
     }
 
     public void onManualButton(View view) {

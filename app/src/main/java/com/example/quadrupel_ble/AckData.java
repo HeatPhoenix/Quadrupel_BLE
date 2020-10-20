@@ -3,7 +3,7 @@ package com.example.quadrupel_ble;
 public class AckData{
     short timestamp;        //0-1
     byte mode_flags;        //2
-    byte battery_approx;    //3
+    int battery_approx;    //3
     byte errcode;           //4
     byte ae0_approx;        //5
     byte ae1_approx;
@@ -20,7 +20,7 @@ public class AckData{
     {
         timestamp = (short) ((raw[0]<<8) | raw[1]);
         mode_flags = raw[2];
-        battery_approx = raw[3];
+        battery_approx = ((int)raw[3]*1000);
         errcode = raw[4];
         ae0_approx = raw[5];
         ae1_approx = raw[6];

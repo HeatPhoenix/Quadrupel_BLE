@@ -34,13 +34,9 @@ public class Protocol {
         MODE_YAW(0x04),
         MODE_FULL(0x05),
 
-        UNSET_RAW_SENSORS(0x04),
-        UNSET_HEIGHT_CTL (0x05),
-        UNSET_WIRELESS(0x06),
-
-        SET_RAW_SENSORS (0x07),
-        SET_HEIGHT_CTL (0x08),
-        SET_WIRELESS (0x09);
+        MODE_RAW(0x06),
+        MODE_HEIGHT(0x07),
+        MODE_WIRELESS(0x08);
 
         public final int label;
         private static Map map = new HashMap<>();
