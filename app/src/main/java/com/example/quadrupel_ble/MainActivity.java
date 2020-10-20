@@ -250,6 +250,9 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
         {
             currentACK = new AckData(packet.data.raw);
 
+            if(currentACK.errcode != -1)
+                Log.e("currentAck", "Error: " + currentACK.errcode);
+
             m1_text.setText(""+currentACK.ae0_approx);
             m2_text.setText(""+currentACK.ae1_approx);
             m3_text.setText(""+currentACK.ae2_approx);
@@ -262,6 +265,16 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
 
             mode_text.setText(""+currentACK.mode);
             flags_text.setText(""+currentACK.flags);
+        }
+        else if(packet.type == Protocol.packet_type.NACK)
+        {
+            Log.e("NACK", "Error: " + packet.data.raw[1]);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {Toast.makeText(getApplicationContext(), "NACK with Error Code: " + packet.data.raw[1], Toast.LENGTH_LONG).show();
+
+                }
+            });
         }
     }
 
