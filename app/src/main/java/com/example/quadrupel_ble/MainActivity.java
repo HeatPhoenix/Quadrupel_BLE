@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
                     //ctrl
                     if(roll_sb.getProgress() != 128 || pitch_sb.getProgress() != 128 || yaw_sb.getProgress() != 128 || throttle_sb.getProgress() != 0)
                     {
-                        sendPacket(Commands.send_ctrl((byte)(throttle_sb.getProgress() & 0xFF), (byte) roll_sb.getProgress(), (byte) pitch_sb.getProgress(), (byte) throttle_sb.getProgress()));
+                        sendPacket(Commands.send_ctrl((byte)(throttle_sb.getProgress() & 0xFF), (byte) (yaw_sb.getProgress() - sb_default), (byte) (pitch_sb.getProgress() - sb_default), (byte) (roll_sb.getProgress() - sb_default)));
                         timer = 16;
                         if(!isTouching)
                             resetSeekbars(false);
