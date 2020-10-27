@@ -166,6 +166,9 @@ public class Protocol {
         Byte[] c = new Byte[2];
         c[0] = (byte) (a[0] + b[0]);
         c[1] = (byte) (a[1] + b[1]);
+        if ((int)a[1] + (int)b[1] >= 0x100) {
+            c[0]++;
+        }
         return c;
 
     }

@@ -5,10 +5,10 @@ public class AckData{
     byte mode_flags;        //2
     int battery_approx;    //3
     byte errcode;           //4
-    byte ae0_approx;        //5
-    byte ae1_approx;
-    byte ae2_approx;
-    byte ae3_approx;        //8
+    int ae0_approx;        //5
+    int ae1_approx;
+    int ae2_approx;
+    int ae3_approx;        //8
     short phi;//-> roll     //9-10
     short theta;//-> pitch  //11-12
     short psi;//-> yaw      //13-14
@@ -20,12 +20,12 @@ public class AckData{
     {
         timestamp = (short) ((raw[0]<<8) | raw[1]);
         mode_flags = raw[2];
-        battery_approx = ((int)raw[3]*1000);
+        battery_approx = ((int)(raw[3]/100)+10);
         errcode = raw[4];
-        ae0_approx = raw[5];
-        ae1_approx = raw[6];
-        ae2_approx = raw[7];
-        ae3_approx = raw[8];
+        ae0_approx = Byte.toUnsignedInt(raw[5]);
+        ae1_approx = Byte.toUnsignedInt(raw[6]);
+        ae2_approx = Byte.toUnsignedInt(raw[7]);
+        ae3_approx = Byte.toUnsignedInt(raw[8]);
         phi = (short) ((raw[9]<<8) | raw[10]);
         theta = (short) ((raw[11]<<8) | raw[12]);
         psi = (short) ((raw[13]<<8) | raw[14]);
