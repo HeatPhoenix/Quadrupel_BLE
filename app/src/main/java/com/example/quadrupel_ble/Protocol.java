@@ -9,6 +9,20 @@ import static com.example.quadrupel_ble.Protocol.State.*;
 
 public class Protocol {
 
+    //0000 0000 01.00 0000
+    public static Byte[]  P_STEP = {0, (byte) 64};//16 bit
+    public static Byte[]  P_STEP_MIN = {0, (byte) -64};//16 bit
+    //0000 0111 10.00 0000
+    public static Byte[]  DEFAULT_P1 = {(byte) 0x07, (byte) 0x80};
+    //0010 0101 10.00 0000
+    public static Byte[]  DEFAULT_P2 = {(byte) 0x25, (byte) 0x80};
+    //0000 0010 00.00 0000
+    public static Byte[]  DEFAULT_P_YAW = {(byte)0x08, 0};
+    //0000 0000 01.00 0000
+    public static Byte[]  DEFAULT_P_HEIGHT = {0, (byte) 128};
+    //0000 0000 00.00 0100
+    public static Byte[]  DEFAULT_I_HEIGHT = {(byte) 0, (byte) 0x04};
+
     public static enum State {
         GET_START,
         GET_LEN,
@@ -16,6 +30,41 @@ public class Protocol {
         GET_DATA,
         GET_CRC,
     }
+
+    /* Control packet axes */
+    enum ctl_axis {
+        AXIS_P1_ROLLPITCH(0x00),
+        AXIS_P2_ROLLPITCH(0x01),
+        AXIS_YAW(0x02),
+        AXIS_HEIGHT(0x03);
+
+        public final int label;
+
+        private static Map map = new HashMap<>();
+
+        private ctl_axis(int label) {
+            this.label = label;
+        }
+
+        static {
+            for (ctl_axis pageType : ctl_axis.values()) {
+                map.put(pageType.label, pageType);
+            }
+        }
+
+        public static ctl_axis valueOf(int axis) {
+            return (ctl_axis) map.get(axis);
+        }
+
+        public int getValue() {
+            return label;
+        }
+
+        public byte toByte(){
+            return (byte) label;
+        }
+    };
+
 
     public static byte START_BYTE = (byte) 0xFF;
     public static int BASE_PACKET_SIZE = 4;
@@ -112,7 +161,14 @@ public class Protocol {
         }
     }
 
+    public static Byte[] addByteArrays(Byte[] a, Byte[] b)
+    {
+        Byte[] c = new Byte[2];
+        c[0] = (byte) (a[0] + b[0]);
+        c[1] = (byte) (a[1] + b[1]);
+        return c;
 
+    }
 
    // static byte compute_crc(Packet p);
 

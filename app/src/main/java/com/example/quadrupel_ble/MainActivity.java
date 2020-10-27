@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
     private boolean ping_flag = false;
     private int timeout_counter = 0;
 
+    //value 1 - int 2^5 = 32
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,11 +108,13 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                int timer = 450;
                 if (connected && ping_flag) {
                     //ctrl
                     if(roll_sb.getProgress() != 128 || pitch_sb.getProgress() != 128 || yaw_sb.getProgress() != 128 || throttle_sb.getProgress() != 0)
                     {
                         sendPacket(Commands.send_ctrl((byte)(throttle_sb.getProgress() & 0xFF), (byte) roll_sb.getProgress(), (byte) pitch_sb.getProgress(), (byte) throttle_sb.getProgress()));
+                        timer = 16;
                         if(!isTouching)
                             resetSeekbars(false);
                         Log.i("WDThandler", "control packet");
@@ -131,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
                         timeout_counter = 0;
                     }
                 }
-                mHandler.postDelayed(this, 250);//twice per watchdog timer we ping
+                mHandler.postDelayed(this, 450);//about once per WDT
                 roll_sb.setProgress(sb_default);
                 pitch_sb.setProgress(sb_default);
                 yaw_sb.setProgress(sb_default);
@@ -386,5 +390,45 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
 
     public void onManualButton(View view) {
         sendPacket(Commands.send_mode(Protocol.modes.MODE_MANUAL.toByte()));
+    }
+
+    public void pMinusButton(View view) {
+        sendPacket(Commands.adjust_yaw_P(Protocol.P_STEP_MIN));
+    }
+
+    public void pPlusButton(View view) {
+        sendPacket(Commands.adjust_yaw_P(Protocol.P_STEP));
+    }
+
+    public void p1MinusButton(View view) {
+        sendPacket(Commands.adjust_rollpitch_P1(Protocol.P_STEP_MIN));
+    }
+
+    public void p1PlusButton(View view) {
+        sendPacket(Commands.adjust_rollpitch_P1(Protocol.P_STEP));
+    }
+
+    public void p2MinusButton(View view) {
+        sendPacket(Commands.adjust_rollpitch_P2(Protocol.P_STEP_MIN));
+    }
+
+    public void p2PlusButton(View view) {
+        sendPacket(Commands.adjust_rollpitch_P2(Protocol.P_STEP));
+    }
+
+    public void hpMinusButton(View view) {
+        sendPacket(Commands.adjust_height_pi(Protocol.P_STEP_MIN, new Byte[]{0, 0}));
+    }
+
+    public void hpPlusButton(View view) {
+        sendPacket(Commands.adjust_height_pi(Protocol.P_STEP, new Byte[]{0, 0}));
+    }
+
+    public void hiMinusButton(View view) {
+        sendPacket(Commands.adjust_height_pi(new Byte[]{0, 0}, Protocol.P_STEP_MIN));
+    }
+
+    public void hiPlusButton(View view) {
+        sendPacket(Commands.adjust_height_pi(new Byte[]{0, 0}, Protocol.P_STEP));
     }
 }
