@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
     private TextView mode_text;
     private TextView flags_text;
     private boolean ping_flag = false;
+    private boolean last_ctrl = false;
     private int timeout_counter = 0;
 
     //value 1 - int 2^5 = 32
@@ -109,33 +110,32 @@ public class MainActivity extends AppCompatActivity implements DeviceBluetoothIn
             @Override
             public void run() {
                 int timer = 450;
-                if (connected && ping_flag) {
+                if (connected) {
                     //ctrl
                     if(roll_sb.getProgress() != 128 || pitch_sb.getProgress() != 128 || yaw_sb.getProgress() != 128 || throttle_sb.getProgress() != 0)
                     {
                         sendPacket(Commands.send_ctrl((byte)(throttle_sb.getProgress() & 0xFF), (byte) (yaw_sb.getProgress() - sb_default), (byte) (pitch_sb.getProgress() - sb_default), (byte) (roll_sb.getProgress() - sb_default)));
-                        timer = 16;
+                        timer = 40;
+                        last_ctrl = true;
                         if(!isTouching)
                             resetSeekbars(false);
+
+
                         Log.i("WDThandler", "control packet");
                     }
                     else//ping
                     {
-                        sendPacket(Commands.send_ping());
+                        if(last_ctrl)
+                            sendPacket(Commands.send_ctrl((byte) 0, (byte)0, (byte)0, (byte)0));
+                        else
+                        {
+                            sendPacket(Commands.send_ping());
+                        }
+                        last_ctrl = false;
                         Log.i("WDThandler", "pinged");
                     }
-                    ping_flag = false;
                 }
-                else if(ping_flag == false)
-                {
-                    timeout_counter++;
-                    if(timeout_counter > 0)
-                    {
-                        ping_flag = true;
-                        timeout_counter = 0;
-                    }
-                }
-                mHandler.postDelayed(this, 450);//about once per WDT
+                mHandler.postDelayed(this, timer);//about once per WDT
                 roll_sb.setProgress(sb_default);
                 pitch_sb.setProgress(sb_default);
                 yaw_sb.setProgress(sb_default);

@@ -15,6 +15,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
@@ -95,7 +96,12 @@ public class DeviceBluetoothManager {
             // Get the data from params
             byte[] data = params[0];
 
-            System.out.println("Task: Acquiring write-semaphore!");
+            String toPrint = "";
+            for(byte b : data) {
+                toPrint += Integer.toHexString((int) b).toUpperCase() + " ";
+            }
+
+            System.out.println("Task: Acquiring write-semaphore! - " + Calendar.getInstance().getTime().toString() + "Data: " + toPrint);
 
             // Wait on the write-semaphore
             try {
